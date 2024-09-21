@@ -3,19 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ارسال موقعیت مکانی</title>
-    <script>
+    <title>ارسال موقعیت مکانی با EmailJS</title>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
+    <script type="text/javascript">
+        // مقداردهی اولیه EmailJS
+        (function() {
+            emailjs.init("YOUR_USER_ID"); // اینجا User ID خود را وارد کنید
+        })();
+
         function sendLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     var latitude = position.coords.latitude;
                     var longitude = position.coords.longitude;
 
-                    // ساخت متن ایمیل با موقعیت مکانی
-                    var locationMessage = "عرض جغرافیایی: " + latitude + "، طول جغرافیایی: " + longitude;
+                    // داده‌هایی که به قالب EmailJS ارسال می‌شوند
+                    var templateParams = {
+                        to_name: "Recipient Name", // نام دریافت‌کننده
+                        from_name: "Your Name", // نام شما
+                        message: "موقعیت مکانی: عرض جغرافیایی: " + latitude + "، طول جغرافیایی: " + longitude
+                    };
 
-                    // باز کردن ایمیل کلاینت و ارسال موقعیت مکانی
-                    window.location.href = "mailto:nimole2020@gmail.com?subject=موقعیت%20کاربر&body=" + locationMessage;
+                    // ارسال ایمیل از طریق EmailJS
+                    emailjs.send('gmail', 'emplate_ah0gh24', templateParams)
+                        .then(function(response) {
+                            alert('موقعیت مکانی ارسال شد!');
+                        }, function(error) {
+                            alert('خطا در ارسال ایمیل: ' + error);
+                        });
                 });
             } else {
                 alert("مرورگر شما از قابلیت مکان‌یابی پشتیبانی نمی‌کند.");
@@ -23,7 +38,7 @@
         }
     </script>
 </head>
-<body onload="sendLocation()">
-    <h1>در حال ارسال موقعیت مکانی شما...</h1>
+<body>
+    <button onclick="sendLocation()">ارسال موقعیت مکانی من</button>
 </body>
 </html>
